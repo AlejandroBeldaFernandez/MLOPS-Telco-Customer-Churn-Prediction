@@ -1,0 +1,6 @@
+FROM python:3.12-slim
+WORKDIR /src
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["mlflow", "server", "--backend-store-uri", "sqlite:///mlflow.db", "--artifacts-destination", "./mlruns", "--default-artifact-root", "mlflow-artifacts:/", "--serve-artifacts", "--allowed-hosts", "mlflow:5000,localhost:5000,127.0.0.1:5000", "--host", "0.0.0.0", "--port", "5000"]
