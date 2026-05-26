@@ -7,6 +7,7 @@ __pycache__
 *.pkl
 *.log
 *.csv
+.terraform
 *.ipynb
 *.pyc
 .DS_Store

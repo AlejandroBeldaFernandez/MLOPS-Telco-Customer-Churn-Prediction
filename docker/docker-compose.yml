@@ -1,16 +1,18 @@
 services:
   api:
-    environment:
-      - MLFLOW_TRACKING_URI=http://mlflow:5000
     build: 
           context: .. 
           dockerfile: docker/Dockerfile.api
     ports:
       - "8000:8000"
-    volumes:
-      - ../mlruns:/src/mlruns
     depends_on:
       - mlflow
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=eu-west-1
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - MLFLOW_S3_ENDPOINT_URL=http://localstack:4566
   mlflow:
     build: 
           context: .. 
@@ -19,10 +21,22 @@ services:
       - "5000:5000"
     volumes:
       - ../mlflow.db:/src/mlflow.db
-      - ../mlruns:/src/mlruns
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=eu-west-1
+      - MLFLOW_S3_ENDPOINT_URL=http://localstack:4566
+    depends_on:
+      - localstack
   prefect:
     build: 
           context: .. 
           dockerfile: docker/Dockerfile.prefect
     ports:
       - "4200:4200"
+  localstack:
+    image: localstack/localstack:3
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
