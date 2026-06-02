@@ -5,7 +5,7 @@ results
 mlflow.db
 __pycache__
 *.pkl
-*.log
+*.lo
 *.csv
 .terraform
 *.ipynb
