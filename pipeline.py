@@ -11,6 +11,7 @@ from src.model_registry import ModelRegistry
 from src.monitor import monitoring, send_alert_email
 from src.preprocessing import preprocessing
 from src.train import train
+from src.validation import validate_data
 
 load_dotenv()
 
@@ -38,6 +39,11 @@ def evaluation_task(X_train, X_test, y_train, y_test, pipeline_final):
 @task
 def monitoring_task(reference_df, current_df):
     return monitoring(reference_df, current_df)
+
+
+@task
+def validate_data_task(df):
+    return validate_data(df)
 
 
 def champion_exists() -> bool:
@@ -69,6 +75,11 @@ def main():
     mlflow.set_experiment(experiment_name)
 
     df = data_loader_task()
+    is_valid = validate_data_task(df)
+
+    if not is_valid:
+        logging.error("Data validation failed. Aborting pipeline.")
+        return
 
     no_champion = not champion_exists()
 
