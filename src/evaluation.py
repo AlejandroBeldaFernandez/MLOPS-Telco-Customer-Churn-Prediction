@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 import pandas as pd
 from sklearn.metrics import (
@@ -76,6 +77,7 @@ def evaluation(
         "precision_test": precision_test,
         "recall_test": recall_test,
     }
+    os.makedirs("results", exist_ok=True)
     with open("results/metrics.json", "w") as f:
         json.dump(metrics, f)
     return metrics
