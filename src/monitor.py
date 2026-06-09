@@ -14,10 +14,7 @@ load_dotenv()
 
 
 def monitoring(reference_df: pd.DataFrame, current_df: pd.DataFrame) -> bool:
-    """
-    Usa Evidently AI para comparar el dataset de referencia (entrenamiento)
-    con el dataset actual (producción). Retorna True si se detecta Drift.
-    """
+    """Run Evidently drift detection comparing reference vs current data. Returns True if drift is detected."""
     logging.info("-----------------------------------------------------------------------")
 
     data_drift_report = Report(metrics=[DataDriftPreset(drift_share=0.4)])
@@ -29,10 +26,10 @@ def monitoring(reference_df: pd.DataFrame, current_df: pd.DataFrame) -> bool:
     number_drifted_columns = report_dict["metrics"][0]["result"]["number_of_drifted_columns"]
     number_columns = report_dict["metrics"][0]["result"]["number_of_columns"]
     dataset_drifted = report_dict["metrics"][0]["result"]["dataset_drift"]
-    logging.info(f"Porcentaje de columnas con Drift detectado: {drift_share * 100:.2f}%")
-    logging.info(f"Número de columnas con Drift: {number_drifted_columns}")
-    logging.info(f"Número total de columnas: {number_columns}")
-    logging.info(f"Dataset con Drift: {dataset_drifted}")
+    logging.info(f"Share of drifted columns: {drift_share * 100:.2f}%")
+    logging.info(f"Number of drifted columns: {number_drifted_columns}")
+    logging.info(f"Total number of columns: {number_columns}")
+    logging.info(f"Dataset drift detected: {dataset_drifted}")
 
     conn = psycopg2.connect(host="localhost", port=5433, database="mydb", user="admin", password="admin")
     cursor = conn.cursor()
