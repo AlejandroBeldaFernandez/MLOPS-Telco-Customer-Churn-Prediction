@@ -1,0 +1,15 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4          # descarga el código
+      - uses: actions/setup-python@v5      # instala Python
+        with:
+          python-version: "3.12"
+      - run: pip install ...               # instala dependencias
+      - run: ruff check .                  # linter
+      - run: python -m pytest tests/ -v    # tests
