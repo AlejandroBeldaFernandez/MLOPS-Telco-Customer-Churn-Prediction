@@ -1,7 +1,9 @@
-from unittest.mock import patch, MagicMock
-import pandas as pd
+from unittest.mock import MagicMock, patch
+
 import numpy as np
+import pandas as pd
 import pytest
+
 from src.monitor import monitoring, send_alert_email
 
 
@@ -9,12 +11,8 @@ from src.monitor import monitoring, send_alert_email
 @pytest.fixture
 def drift_data():
     rng = np.random.default_rng(42)
-    reference_df = pd.DataFrame(
-        {"col1": rng.normal(0, 1, 50), "col2": rng.normal(0, 1, 50)}
-    )
-    current_df = pd.DataFrame(
-        {"col1": rng.normal(0, 1, 50), "col2": rng.normal(0, 1, 50)}
-    )
+    reference_df = pd.DataFrame({"col1": rng.normal(0, 1, 50), "col2": rng.normal(0, 1, 50)})
+    current_df = pd.DataFrame({"col1": rng.normal(0, 1, 50), "col2": rng.normal(0, 1, 50)})
     return reference_df, current_df
 
 
@@ -49,9 +47,7 @@ def test_send_alert_email_calls_smtp():
         # smtplib.SMTP se usa como context manager: with smtplib.SMTP(...) as server
         mock_smtp_class.return_value.__enter__.return_value = mock_server
 
-        with patch.dict(
-            "os.environ", {"GMAIL_USER": "test@test.com", "GMAIL_PASSWORD": "fakepass"}
-        ):
+        with patch.dict("os.environ", {"GMAIL_USER": "test@test.com", "GMAIL_PASSWORD": "fakepass"}):
             send_alert_email({"ROC_AUC_test": 0.85})
 
     mock_server.starttls.assert_called_once()

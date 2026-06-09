@@ -1,7 +1,8 @@
-import pytest
 import pandas as pd
+import pytest
 from sklearn.dummy import DummyClassifier
 from sklearn.pipeline import Pipeline
+
 from src.preprocessing import preprocessing
 
 

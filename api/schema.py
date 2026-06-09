@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class CustomerData(BaseModel):
     gender: str
     tenure: int
@@ -15,9 +16,8 @@ class CustomerData(BaseModel):
     DeviceProtection: str
     TechSupport: str
     StreamingTV: str
-    StreamingMovies: str 
+    StreamingMovies: str
     Contract: str
     PaperlessBilling: str
     PaymentMethod: str
     TotalCharges: float
-    

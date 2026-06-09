@@ -1,0 +1,16 @@
+[project]
+name = "mlops-telco-churn"
+version = "0.1.0"
+description = "MLOps pipeline for Telco Customer Churn prediction"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]  # pycodestyle, pyflakes, isort
+ignore = ["E501"]          # line too long — handled by formatter
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

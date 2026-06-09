@@ -1,35 +1,44 @@
-from src.data_loader import data_loader
-from src.preprocessing import preprocessing
-from src.train import train
-from src.evaluation import evaluation
+import logging
+
+import mlflow
+from dotenv import load_dotenv
+from prefect import flow, task
+
 from src.config import experiment_name, model_name
+from src.data_loader import data_loader
+from src.evaluation import evaluation
 from src.model_registry import ModelRegistry
 from src.monitor import monitoring, send_alert_email
-import mlflow
-import logging
-from prefect import task, flow
-from dotenv import load_dotenv
+from src.preprocessing import preprocessing
+from src.train import train
+
 load_dotenv()
+
 
 @task
 def data_loader_task():
     return data_loader()
 
+
 @task
 def preprocessing_task(df):
     return preprocessing(df)
+
 
 @task
 def train_task(X_train, y_train, preprocessor_rf):
     return train(X_train, y_train, preprocessor_rf)
 
+
 @task
-def evaluation_task(X_train, X_test, y_train, y_test, pipeline_final):  
-    return evaluation(X_train, X_test, y_train, y_test, pipeline_final) 
+def evaluation_task(X_train, X_test, y_train, y_test, pipeline_final):
+    return evaluation(X_train, X_test, y_train, y_test, pipeline_final)
+
 
 @task
 def monitoring_task(reference_df, current_df):
     return monitoring(reference_df, current_df)
+
 
 def champion_exists() -> bool:
     client = mlflow.tracking.MlflowClient()
@@ -89,7 +98,7 @@ def main():
             send_alert_email(metrics)
     else:
         logging.info("No drift detected and champion exists. Skipping retraining.")
-       
+
 
 if __name__ == "__main__":
     # To deploy with monthly schedule on a dedicated Prefect server:

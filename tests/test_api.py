@@ -1,4 +1,5 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 import numpy as np
 
 mock_model = MagicMock()
@@ -41,8 +42,5 @@ def test_predict_response():
     )
     response_json = response.json()
     assert response.status_code == 200
-    assert (
-        response_json["churn_prediction"] == "No Churn"
-        or response_json["churn_prediction"] == "Churn"
-    )
+    assert response_json["churn_prediction"] == "No Churn" or response_json["churn_prediction"] == "Churn"
     assert response_json["prediction_probability"] > 0.0
